@@ -1,4 +1,8 @@
+using Business.Abstract;
+using Business.Concrete;
+using DataAccess.Abstract;
 using DataAccess.Concrete.Database;
+using DataAccess.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -9,6 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); 
 });
+builder.Services.AddScoped<IXEntityDal, EFXEntityDal>();
+builder.Services.AddScoped<IXEntityService, XEntityManager>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();           
