@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Contants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -22,8 +25,10 @@ namespace Business.Concrete
             _xEntityDal = xEntityDal;
         }
 
+        [ValidationAspect(typeof(XEntityValidator))]
         public IResult Add(XEntity xEntity)
         {
+            ValidationTool.Validate(new ValidationRules.FluentValidation.XEntityValidator(), xEntity);
             _xEntityDal.Add(xEntity);
             return new SuccessResult(Messages.XAdded);
         }
