@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Contants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -33,6 +34,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.XAdded);
         }
 
+        [SecuredOperation("admin")]
         public IDataResult<List<XEntity>> GetAll()
         {
             return new SuccessDataResult<List<XEntity>>(_xEntityDal.GetAll(), "");
