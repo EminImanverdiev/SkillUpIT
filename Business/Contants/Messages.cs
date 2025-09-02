@@ -18,5 +18,7 @@ namespace Business.Contants
         public static string UserNotFound ="Istifadeci tapilmadi";
         public static string PasswordError ="Parol sehvdir";
         public static string AccessTokenCreated ="Token yaradildi";
+
+        public static string XNotFound { get; internal set; }
     }
 }
