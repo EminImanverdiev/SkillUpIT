@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +16,7 @@ namespace WebAPI.Controllers
         {
             _xEntityService = xEntityService;
         }
-
+        [Authorize(Roles = "Student")]
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
@@ -25,7 +27,10 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Message);
         }
+        //[SecuredOperation("Admin")]
+        [Authorize("User")]
         [HttpPost("add")]
+     
         public IActionResult Post(XEntity xEntity)
         {
             var result = _xEntityService.Add(xEntity);

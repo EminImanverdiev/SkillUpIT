@@ -52,7 +52,7 @@ namespace Core.CrossCuttingConcerns.Caching.Microsoft
 
             foreach (var key in keysToRemove)
             {
-                _cache.Remove(key);
+                _memoryCache.Remove(key);
             }
         }
     }

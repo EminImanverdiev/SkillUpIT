@@ -22,6 +22,8 @@ namespace Core.DependencyResolvers
             serviceCollection.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             serviceCollection.AddScoped<ICacheManager, MemoryCacheManager>();
             serviceCollection.AddScoped<Stopwatch>();
+
+
         }
     }
 }

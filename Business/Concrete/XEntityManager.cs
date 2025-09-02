@@ -34,7 +34,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.XAdded);
         }
 
-        [SecuredOperation("admin")]
         public IDataResult<List<XEntity>> GetAll()
         {
             return new SuccessDataResult<List<XEntity>>(_xEntityDal.GetAll(), "");

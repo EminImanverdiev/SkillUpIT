@@ -1,17 +1,16 @@
 ﻿using Business.Abstract;
 using Business.Contants;
 using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using Core.Utilities.Security.Hashing;
-using Core.Utilities.Security.JWT.Abstract;
-using Core.Utilities.Security.JWT.Concrete;
+using Core.Utilities.Security.Jwt;
+using DataAccess.Concrete.Database;
 using Entities.DTOs.Users;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -19,29 +18,67 @@ namespace Business.Concrete
     {
         private IUserService _userService;
         private ITokenHelper _tokenHelper;
-
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        private readonly AppDbContext _db;
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, AppDbContext db)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _db = db;
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        public IDataResult<User> Register(UserForRegisterDto dto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
             var user = new User
             {
-                Email = userForRegisterDto.Email,
-                FirstName = userForRegisterDto.FirstName,
-                LastName = userForRegisterDto.LastName,
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
             };
-            _userService.Add(user);
-            return new SuccessDataResult<User>(user, Messages.UserRegistered);
+
+            using var tx = _db.Database.BeginTransaction();
+            try
+            {
+                _db.Users.Add(user);
+                _db.SaveChanges();
+
+                var student = _db.OperationClaims.FirstOrDefault(x => x.Name == "Student");
+                if (student == null)
+                {
+                    student = new OperationClaim { Id = Guid.NewGuid(), Name = "Student" };
+                    _db.OperationClaims.Add(student);
+                    _db.SaveChanges();
+                }
+
+                var exists = _db.UserOperationClaims
+                    .Any(x => x.UserId == user.Id && x.OperationClaimId == student.Id);
+
+                if (!exists)
+                {
+                    _db.UserOperationClaims.Add(new UserOperationClaim
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = user.Id,
+                        OperationClaimId = student.Id
+                    });
+                    _db.SaveChanges();
+                }
+
+                tx.Commit();
+                return new SuccessDataResult<User>(user, Messages.UserRegistered);
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+                return new ErrorDataResult<User>(user, "Register failed: " + ex.Message);
+            }
         }
+
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
         {

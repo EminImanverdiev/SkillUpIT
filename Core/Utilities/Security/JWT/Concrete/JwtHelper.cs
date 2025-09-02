@@ -1,8 +1,6 @@
 ﻿using Core.Entities.Concrete;
 using Core.Extensions;
 using Core.Utilities.Security.Encryption;
-using Core.Utilities.Security.JWT.Abstract;
-using Core.Utilities.Security.JWT.Concrete;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;

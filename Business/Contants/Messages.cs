@@ -11,12 +11,12 @@ namespace Business.Contants
     {
         public static string XAdded = "elave edildi";
 
-        public static string? AuthorizationDenied { get; internal set; }
-        public static string UserRegistered { get; internal set; }
-        public static string SuccessfulLogin { get; internal set; }
-        public static string UserAlreadyExists { get; internal set; }
-        public static User UserNotFound { get; internal set; }
-        public static User PasswordError { get; internal set; }
-        public static string AccessTokenCreated { get; internal set; }
+        public static string? AuthorizationDenied="Autoriaz olun";
+        public static string UserRegistered="istifadeci qeydiyyatdan kecdi";
+        public static string SuccessfulLogin ="Ugurla giris edildi";
+        public static string UserAlreadyExists = "Istifadeci artiq movcuddur";
+        public static string UserNotFound ="Istifadeci tapilmadi";
+        public static string PasswordError ="Parol sehvdir";
+        public static string AccessTokenCreated ="Token yaradildi";
     }
 }
