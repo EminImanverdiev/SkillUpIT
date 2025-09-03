@@ -28,7 +28,8 @@ namespace Business.Concrete
                 Id = Guid.NewGuid(),
                 Title= create.Title,
                 Description= create.Description,
-                Icon= create.Icon
+                Icon= create.Icon,
+                CreatedAt= DateTime.UtcNow,
             };
             _contactBlockDal.Add(addedContactBlock);
             return new SuccessResult("Məlumatlar əlavə edildi");
@@ -70,6 +71,7 @@ namespace Business.Concrete
             contactBlockToUpdate.Title = update.Title;
             contactBlockToUpdate.Description = update.Description;
             contactBlockToUpdate.Icon = update.Icon;
+            contactBlockToUpdate.UpdatedAt = DateTime.UtcNow;
             _contactBlockDal.Update(contactBlockToUpdate);
             return new SuccessResult("Məlumat yeniləndi");
         }

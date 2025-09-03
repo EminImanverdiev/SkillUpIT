@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Abstract;
+using Entities.Concrete.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class Testimonial:IEntity
+    public class Testimonial : BaseEntity, IEntity
     {
-        public Guid Id { get; set; }
         public string FullName { get; set; }     
         public string PositionTitle { get; set; }  
         public string CompanyName { get; set; }   

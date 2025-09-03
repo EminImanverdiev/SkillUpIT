@@ -29,6 +29,7 @@ namespace Business.Concrete
                 Id=Guid.NewGuid(),
                 Content = create.Content,
                 Title = create.Title,
+                CreatedAt = DateTime.UtcNow,
             };
             _fagDal.Add(addedfag);
             return new SuccessResult(Messages.XAdded);
@@ -73,6 +74,7 @@ namespace Business.Concrete
             }
             existingFag.Title = update.Title;
             existingFag.Content = update.Content;
+            existingFag.UpdatedAt = DateTime.UtcNow;
             _fagDal.Update(existingFag);
             return new SuccessDataResult<FagGetDto>("Ugurla yenilendi");
         }

@@ -32,6 +32,7 @@ namespace Business.Concrete
                 CompanyName = create.CompanyName,
                 AvatarUrl = create.AvatarUrl,
                 Quote = create.Quote,
+                CreatedAt = DateTime.UtcNow
             };
             _testimonialDal.Add(addedTestimonial);
             return new SuccessResult("Testimonail elave edildi");

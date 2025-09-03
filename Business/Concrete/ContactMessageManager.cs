@@ -29,6 +29,7 @@ namespace Business.Concrete
                 Email = create.Email,
                 Subject = create.Subject,
                 Message = create.Message,
+                CreatedAt = DateTime.UtcNow,
             };
             _contactmessagedal.Add(addedContactMessage);
             return new SuccessResult("Məlumatlar əlavə edildi");
@@ -44,6 +45,7 @@ namespace Business.Concrete
                 Email = cm.Email,
                 Subject = cm.Subject,
                 Message = cm.Message,
+                
             }).ToList();
             return new SuccessDataResult<List<ContactMessageGetDto>>(modifiedContactMessages, "Məlumatlar göstərildi");
         }
