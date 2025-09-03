@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class XEntity:IEntity
+    public class ContactMessage:IEntity
     {
         public Guid Id { get; set; }
-        public string XName { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using Business.Contants;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs.Fags;
 using System;
@@ -23,45 +22,60 @@ namespace Business.Concrete
             _fagDal = fagDal;
         }
 
-        public IResult Add(FagDto fag)
+        public IResult Add(FagCreateDto create)
         {
             var addedfag = new Fag()
             {
                 Id=Guid.NewGuid(),
-                Content = fag.Content,
-                Title = fag.Title,
+                Content = create.Content,
+                Title = create.Title,
             };
             _fagDal.Add(addedfag);
             return new SuccessResult(Messages.XAdded);
         }
 
-        public IDataResult<List<GetFag>> GetAll()
+        public IDataResult<List<FagGetDto>> GetAll()
         {
             var fags = _fagDal.GetAll(); 
-            var modifiedfags = fags.Select(f => new GetFag
+            var modifiedfags = fags.Select(f => new FagGetDto
             {
                 Id = f.Id,
                 Title = f.Title,
                 Content = f.Content
             }).ToList();
 
-            return new SuccessDataResult<List<GetFag>>(modifiedfags, "");
+            return new SuccessDataResult<List<FagGetDto>>(modifiedfags, "");
         }
 
-        public IDataResult<GetFag> GetById(Guid id)
+        public IDataResult<FagGetDto> GetById(Guid id)
         {
             var fag = _fagDal.Get(x => x.Id == id); 
             if (fag == null)
-                return new ErrorDataResult<GetFag>(null, Messages.XNotFound);
+                return new ErrorDataResult<FagGetDto>(null, Messages.XNotFound);
 
-            var modifiedfag = new GetFag
+            var modifiedfag = new FagGetDto
             {
                 Id = fag.Id,
                 Title = fag.Title,
                 Content = fag.Content
             };
 
-            return new SuccessDataResult<GetFag>(modifiedfag, "");
+            return new SuccessDataResult<FagGetDto>(modifiedfag, "");
         }
+
+        public IResult Update(FagUpdateDto update)
+        {
+           
+            var existingFag = _fagDal.Get(x => x.Id == update.Id);
+            if (existingFag == null)
+            {
+                return new ErrorResult("Fag tapilmadi");
+            }
+            existingFag.Title = update.Title;
+            existingFag.Content = update.Content;
+            _fagDal.Update(existingFag);
+            return new SuccessDataResult<FagGetDto>("Ugurla yenilendi");
+        }
+
     }
 }

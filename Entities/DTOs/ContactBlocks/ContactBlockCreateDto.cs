@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DTOs.Fags
+namespace Entities.DTOs.ContactBlocks
 {
-    public class FagDto:IDto
+    public class ContactBlockCreateDto:IDto
     {
         public string Title { get; set; }
-        public string Content { get; set; }
+        public string Icon { get; set; }
+        public string Description { get; set; }
     }
 }

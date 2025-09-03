@@ -1,7 +1,6 @@
 ﻿using Business.Abstract;
-using Business.BusinessAspects.Autofac;
-using Entities.Concrete;
-using Microsoft.AspNetCore.Authorization;
+using Entities.DTOs.ContactBlocks;
+using Entities.DTOs.Fags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,31 +8,38 @@ namespace WebAPI.Controllers
 {
     [Route("nam/[controller]")]
     [ApiController]
-    public class XEntitiesController : ControllerBase
+    public class ContactBlocksController : ControllerBase
     {
-        IXEntityService _xEntityService;
-        public XEntitiesController(IXEntityService xEntityService)
+        IContactBlockService _service;
+
+        public ContactBlocksController(IContactBlockService service)
         {
-            _xEntityService = xEntityService;
+            _service = service;
         }
-        [Authorize(Roles = "Student")]
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _xEntityService.GetAll();
+            var result = _service.GetAll();
             if (result.Success)
             {
                 return Ok(result.Data);
             }
             return BadRequest(result.Message);
         }
-        //[SecuredOperation("Admin")]
-        [Authorize("User")]
         [HttpPost("add")]
-     
-        public IActionResult Post(XEntity xEntity)
+        public IActionResult Create(ContactBlockCreateDto create)
         {
-            var result = _xEntityService.Add(xEntity);
+            var result = _service.Add(create);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPut("update")]
+        public IActionResult Update(ContactBlockUpdateDto update)
+        {
+            var result = _service.Update(update);
             if (result.Success)
             {
                 return Ok(result);
@@ -43,12 +49,13 @@ namespace WebAPI.Controllers
         [HttpGet("id")]
         public IActionResult Get(Guid id)
         {
-            var result = _xEntityService.GetById(id);
+            var result = _service.GetById(id);
             if (result.Success)
             {
                 return Ok(result.Data);
             }
             return BadRequest(result.Message);
         }
+
     }
 }

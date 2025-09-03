@@ -9,30 +9,30 @@ using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EFDALs;
 
 public class AutofacBusinessModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterType<XEntityManager>()
-               .As<IXEntityService>()
-               .InstancePerLifetimeScope();
+   
 
-        builder.RegisterType<EFXEntityDal>()
-               .As<IXEntityDal>()
-               .InstancePerLifetimeScope();
 
         builder.RegisterType<UserManager>().As<IUserService>();
         builder.RegisterType<EfUserDal>().As<IUserDal>();
 
         builder.RegisterType<FagManager>().As<IFagService>();
         builder.RegisterType<EFFagDal>().As<IFagDal>();
+        
+        builder.RegisterType<ContactBlockManager>().As<IContactBlockService>();
+        builder.RegisterType<EFContactBlockDal>().As<IContactBlockDal>();
 
+        builder.RegisterType<ContactMessageManager>().As<IContactMessageService>();
+        builder.RegisterType<EFContactMessageDal>().As<IContactMessageDal>();
 
         builder.RegisterType<AuthManager>().As<IAuthService>();
         builder.RegisterType<JwtHelper>().As<ITokenHelper>();
+
 
         var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

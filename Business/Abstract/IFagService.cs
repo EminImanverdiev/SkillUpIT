@@ -11,8 +11,9 @@ namespace Business.Abstract
 {
     public interface IFagService
     {
-        IDataResult<List<GetFag>> GetAll();
-        IDataResult<GetFag> GetById(Guid id);
-        IResult Add(FagDto fag);
+        IDataResult<List<FagGetDto>> GetAll();
+        IDataResult<FagGetDto> GetById(Guid id);
+        IResult Add(FagCreateDto create);
+        IResult Update(FagUpdateDto update);
     }
 }

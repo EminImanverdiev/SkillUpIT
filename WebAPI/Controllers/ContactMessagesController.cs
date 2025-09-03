@@ -1,7 +1,5 @@
 ﻿using Business.Abstract;
-using Entities.Concrete;
-using Entities.DTOs.Fags;
-using Microsoft.AspNetCore.Authorization;
+using Entities.DTOs.ContactMessages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,18 +7,18 @@ namespace WebAPI.Controllers
 {
     [Route("nam/[controller]")]
     [ApiController]
-    public class FagsController : ControllerBase
+    public class ContactMessagesController : ControllerBase
     {
-        IFagService _fagService;
+        IContactMessageService _service;
 
-        public FagsController(IFagService fagService)
+        public ContactMessagesController(IContactMessageService service)
         {
-            _fagService = fagService;
+            _service = service;
         }
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _fagService.GetAll();
+            var result = _service.GetAll();
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -28,9 +26,9 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
         [HttpPost("add")]
-        public IActionResult Create(FagCreateDto fag)
+        public IActionResult Create(ContactMessageCreateDto create)
         {
-            var result = _fagService.Add(fag);
+            var result = _service.Add(create);
             if (result.Success)
             {
                 return Ok(result);
@@ -40,23 +38,12 @@ namespace WebAPI.Controllers
         [HttpGet("id")]
         public IActionResult Get(Guid id)
         {
-            var result = _fagService.GetById(id);
+            var result = _service.GetById(id);
             if (result.Success)
             {
                 return Ok(result.Data);
             }
             return BadRequest(result.Message);
-        }
-        [HttpPut("update")]
-
-        public IActionResult Update(FagUpdateDto update)
-        {
-            var result = _fagService.Update(update);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
         }
     }
 }

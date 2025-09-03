@@ -10,7 +10,6 @@ using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Database;
-using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,7 +54,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
 
-    // Bearer Security Definition
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -72,7 +70,6 @@ builder.Services.AddSwaggerGen(c =>
     };
     c.AddSecurityDefinition("Bearer", securityScheme);
 
-    // Bütün endpoint-lərə tətbiq olunsun
     var securityRequirement = new OpenApiSecurityRequirement
     {
         { securityScheme, Array.Empty<string>() }
