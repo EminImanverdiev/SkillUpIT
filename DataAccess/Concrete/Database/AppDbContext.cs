@@ -18,6 +18,7 @@ namespace DataAccess.Concrete.Database
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<ContactBlock> ContactBlocks { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<Testimonial> Testimonials { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
