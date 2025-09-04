@@ -12,6 +12,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -27,7 +28,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 });
 builder.Host.UseServiceProviderFactory(new  AutofacServiceProviderFactory());
-
+builder.Services.AddScoped<IFileService>(sp =>
+{
+    var env = sp.GetRequiredService<IWebHostEnvironment>();
+    var options = sp.GetRequiredService<IOptions<FileUploadOptions>>();
+    return new FileManager(env.WebRootPath, options);
+});
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new AutofacBusinessModule());
