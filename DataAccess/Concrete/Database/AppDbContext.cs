@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Concrete;
 using Entities.Concrete;
+using Entities.Concrete.Events;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,19 @@ namespace DataAccess.Concrete.Database
         public DbSet<ContactBlock> ContactBlocks { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventContent> EventContents { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Event>()
+                .HasMany(x => x.EventContents)
+                .WithOne(x => x.Event)
+                .HasForeignKey(x => x.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
