@@ -21,6 +21,7 @@ namespace DataAccess.Concrete.Database
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
         public DbSet<Event> Events { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
         public DbSet<EventContent> EventContents { get; set; }
 
 
