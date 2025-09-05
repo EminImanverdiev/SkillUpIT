@@ -23,6 +23,14 @@ namespace WebAPI.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+        [HttpGet("getpaged")]
+        public IActionResult GetPaged([FromQuery] int page = 1, [FromQuery] int limit = 10)
+        {
+            var result = _service.GetAllFilter(page, limit);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
         [HttpGet("getbyid")]
         public IActionResult GetById(Guid id)
         {

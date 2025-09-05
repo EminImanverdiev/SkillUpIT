@@ -3,6 +3,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.Events;
+using Entities.DTOs.Blogs;
 using Entities.DTOs.Events;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,23 @@ namespace Business.Concrete
                 Url = e.Url,
             }).ToList();
             return new SuccessDataResult<List<EventGetDto>>(modifiedEvents, "Events retrieved successfully.");
+        }
+
+        public IDataResult<List<BlogGetDto>> GetAllFilter(int page, int limit)
+        {
+            var events = _eventDal.GetAllFilter(
+                            page, limit,
+                            filter: null,
+                            orderBy: q => q.OrderByDescending(e => e.CreatedAt)
+                        )
+                        .Select(e => new BlogGetDto
+                        {
+                            Id = e.Id,
+                            Title = e.Title,
+                            Content = e.Description,
+                            ImageUrl = e.Url
+                        }).ToList();
+            return new SuccessDataResult<List<BlogGetDto>>(events, "Events retrieved successfully.");
         }
 
         public IDataResult<EventGetDto> GetById(Guid id)

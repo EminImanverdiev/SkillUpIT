@@ -38,6 +38,25 @@ public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEnti
             : _context.Set<TEntity>().Where(filter).ToList();
     }
 
+    public List<TEntity> GetAllFilter(int page, int limit, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+    {
+        if (page <= 0) page = 1;
+        if (limit <= 0) limit = 10;
+
+        IQueryable<TEntity> query = _context.Set<TEntity>().AsNoTracking();
+
+        if (filter != null)
+            query = query.Where(filter);
+
+        if (orderBy != null)
+            query = orderBy(query);
+
+        return query
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .ToList();
+    }
+
     public void Update(TEntity entity)
     {
         _context.Set<TEntity>().Update(entity);

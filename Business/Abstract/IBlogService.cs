@@ -14,5 +14,7 @@ namespace Business.Abstract
         IDataResult<BlogGetDto> GetById(Guid id);
         IResult Add(BlogCreateDto create);
         IResult Update(BlogUpdateDto update);
+        IDataResult<List<BlogGetDto>> GetAllFilter(int page, int limit);
+
     }
 }

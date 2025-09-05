@@ -16,5 +16,6 @@ namespace Core.DataAccess.Abstract
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);
+        List<T> GetAllFilter(int page, int limit, Expression<Func<T, bool>> filter = null,Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
     }
 }

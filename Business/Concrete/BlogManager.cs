@@ -49,6 +49,26 @@ namespace Business.Concrete
             return new SuccessDataResult<List<BlogGetDto>>(modifiedBlogs, "Blogs retrieved successfully.");
         }
 
+        public IDataResult<List<BlogGetDto>> GetAllFilter(int page, int limit)
+        {
+            var blogs = _blogDal.GetAllFilter(
+                            page, limit,
+                            filter: null,
+                            orderBy: q => q.OrderByDescending(b => b.CreatedAt)
+                        )
+                        .Select(b => new BlogGetDto
+                        {
+                            Id = b.Id,
+                            Title = b.Title,
+                            Content = b.Content,
+                            ImageUrl = b.ImageUrl
+                        })
+                        .ToList();
+
+            return new SuccessDataResult<List<BlogGetDto>>(blogs, "Paged blogs retrieved.");
+        }
+
+
         public IDataResult<BlogGetDto> GetById(Guid id)
         {
             var blog = _blogDal.Get(b => b.Id == id);
