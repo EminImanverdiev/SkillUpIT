@@ -2,9 +2,12 @@
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EFDALs;
+using Entities.Concrete;
 using Entities.Concrete.Events;
 using Entities.DTOs.Blogs;
 using Entities.DTOs.Events;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,29 +19,46 @@ namespace Business.Concrete
     public class EventManager : IEventService
     {
         IEventDal _eventDal;
+        IFileService _service;
 
-        public EventManager(IEventDal eventDal)
+        public EventManager(IEventDal eventDal, IFileService service = null)
         {
             _eventDal = eventDal;
+            _service = service;
         }
 
         public IResult Add(EventCreateDto create)
         {
-            if (create.StartDate > create.EndDate)
-                return new ErrorResult("StartDate EndDate-dən böyük ola bilməz.");
-
-            var addedEvent = new Event()
+            try
             {
-                CreatedAt = DateTime.UtcNow,
-                Title = create.Title,
-                Description = create.Description,
-                StartDate = create.StartDate,
-                EndDate = create.EndDate,
-                Location = create.Location,
-                Url = create.Url,
-            };
-            _eventDal.Add(addedEvent);
-            return new SuccessResult("Event added successfully.");
+                string? imageUrl = null;
+                if (create.StartDate > create.EndDate)
+                    return new ErrorResult("StartDate EndDate-dən böyük ola bilməz.");
+                if (create.Url != null && create.Url.Length > 0)
+                {
+                    imageUrl = _service.UploadFileAsync(create.Url, "images").GetAwaiter().GetResult();
+                }
+
+                var addedEvent = new Event()
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    Title = create.Title,
+                    Description = create.Description,
+                    StartDate = create.StartDate,
+                    EndDate = create.EndDate,
+                    Location = create.Location,
+                    Url = imageUrl,
+                };
+
+                _eventDal.Add(addedEvent);
+
+                return new SuccessResult("Event added successfully.");
+            }
+            catch (DbUpdateException ex)
+            {
+                var inner = ex.InnerException?.Message ?? ex.Message;
+                return new ErrorResult($"DB error: {inner}");
+            }
         }
 
         public IDataResult<List<EventGetDto>> GetAll()

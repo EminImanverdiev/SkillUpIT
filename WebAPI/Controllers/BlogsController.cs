@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("add")]
-        public IActionResult Add(BlogCreateDto create)
+        public IActionResult Add([FromForm] BlogCreateDto create)
         {
             var result = _service.Add(create);
             if (result.Success)

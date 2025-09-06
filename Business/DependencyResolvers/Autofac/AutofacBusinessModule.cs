@@ -24,6 +24,13 @@ public class AutofacBusinessModule : Module
         builder.RegisterType<FagManager>().As<IFagService>();
         builder.RegisterType<EFFagDal>().As<IFagDal>();
 
+        builder.RegisterType<EventManager>().As<IEventService>();
+        builder.RegisterType<EFEventDal>().As<IEventDal>();
+
+
+        builder.RegisterType<EventContentManager>().As<IEventContentService>();
+        builder.RegisterType<EFEventContentDal>().As<IEventContentDal>();
+
         builder.RegisterType<BlogManager>().As<IBlogService>();
         builder.RegisterType<EFBlogdal>().As<IBlogDal>();
 
@@ -35,6 +42,7 @@ public class AutofacBusinessModule : Module
         builder.RegisterType<EFContactMessageDal>().As<IContactMessageDal>();
 
         builder.RegisterType<AuthManager>().As<IAuthService>();
+        builder.RegisterType<FileManager>().As<IFileService>();
         builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
 

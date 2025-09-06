@@ -11,6 +11,8 @@ using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -27,12 +29,16 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); 
 
 });
+
 builder.Host.UseServiceProviderFactory(new  AutofacServiceProviderFactory());
-builder.Services.AddScoped<IFileService>(sp =>
+builder.WebHost.ConfigureKestrel(options =>
 {
-    var env = sp.GetRequiredService<IWebHostEnvironment>();
-    var options = sp.GetRequiredService<IOptions<FileUploadOptions>>();
-    return new FileManager(env.WebRootPath, options);
+    options.Limits.MaxRequestBodySize = 524288000; 
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 524288000; 
 });
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -87,6 +93,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();           
 
 var app = builder.Build();
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {

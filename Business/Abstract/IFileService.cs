@@ -1,5 +1,4 @@
-﻿using Entities.Concrete.File;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,10 @@ namespace Business.Abstract
 {
     public interface IFileService
     {
-        Task<FileUploadResult> UploadAsync(IFormFile file, FileCategory cat, string folder);
-        Task<IReadOnlyList<FileUploadResult>> UploadManyAsync(IEnumerable<IFormFile> files, FileCategory cat, string folder);
-        Task DeleteAsync(string urlOrPath);
+        Task<string> UploadFileAsync(IFormFile file, string folderName);
+        Task<List<string>> UploadFilesAsync(List<IFormFile> files, string folderName);
+        Task<bool> DeleteFileAsync(string filePath);
+        Task<List<string>> UploadVideosAsync(List<IFormFile> videos);
+
     }
 }

@@ -4,6 +4,7 @@ using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.Blogs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +15,45 @@ namespace Business.Concrete
 {
     public class BlogManager : IBlogService
     {
-        IBlogDal _blogDal;
+        private readonly IBlogDal _blogDal;
+        private readonly IFileService _fileService; 
 
-        public BlogManager(IBlogDal blogDal)
+        public BlogManager(IBlogDal blogDal, IFileService fileService)
         {
             _blogDal = blogDal;
+            _fileService = fileService;
         }
 
         public IResult Add(BlogCreateDto create)
         {
-            var addedBlog = new Blog
+            try
             {
-                Id = Guid.NewGuid(),
-                Title = create.Title,
-                Content = create.Content,
-                ImageUrl = create.ImageUrl,
-                CreatedAt = DateTime.UtcNow
-            };
-            _blogDal.Add(addedBlog);
-            return new SuccessResult("Blog added successfully.");
+                string? imageUrl = null;
+                if (create.ImageUrl != null && create.ImageUrl.Length > 0)
+                {
+                    imageUrl = _fileService.UploadFileAsync(create.ImageUrl, "images").GetAwaiter().GetResult();
+                }
+
+                var addedBlog = new Blog
+                {
+                    Id = Guid.NewGuid(),
+                    Title = create.Title,
+                    Content = create.Content,
+                    ImageUrl = imageUrl,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _blogDal.Add(addedBlog);
+
+                return new SuccessResult("Blog added successfully.");
+            }
+            catch (DbUpdateException ex)
+            {
+                var inner = ex.InnerException?.Message ?? ex.Message;
+                return new ErrorResult($"DB error: {inner}");
+            }
 
         }
-
         public IDataResult<List<BlogGetDto>> GetAll()
         {
             var blogs=_blogDal.GetAll();

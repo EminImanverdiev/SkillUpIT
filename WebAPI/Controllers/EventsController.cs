@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.DTOs.Blogs;
 using Entities.DTOs.Events;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("add")]
-        public IActionResult Add(Entities.DTOs.Events.EventCreateDto create)
+        public IActionResult Add([FromForm] EventCreateDto create)
         {
             var result = _service.Add(create);
             if (result.Success)

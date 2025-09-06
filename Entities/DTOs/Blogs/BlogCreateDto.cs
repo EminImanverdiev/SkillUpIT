@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Abstract;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace Entities.DTOs.Blogs
     {
         public string Title { get; set; }
         public string Content { get; set; }
-        public string ImageUrl { get; set; }
+        public IFormFile? ImageUrl { get; set; }
     }
 }
