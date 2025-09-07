@@ -25,6 +25,8 @@ namespace DataAccess.Concrete.Database
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<EventContent> EventContents { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,6 +38,24 @@ namespace DataAccess.Concrete.Database
                 .WithOne(x => x.Event)
                 .HasForeignKey(x => x.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Course>()
+          .HasMany(c => c.Tags)
+          .WithMany(t => t.Courses)
+          .UsingEntity<Dictionary<string, object>>(
+              "CourseTag", 
+              j => j.HasOne<Tag>()
+                    .WithMany()
+                    .HasForeignKey("TagId")
+                    .OnDelete(DeleteBehavior.Cascade),
+              j => j.HasOne<Course>()
+                    .WithMany()
+                    .HasForeignKey("CourseId")
+                    .OnDelete(DeleteBehavior.Cascade),
+              j =>
+              {
+                  j.HasKey("CourseId", "TagId");
+                  j.ToTable("CourseTags");
+              });
         }
     }
 }

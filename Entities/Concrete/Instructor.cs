@@ -17,5 +17,6 @@ namespace Entities.Concrete
         public string ProfileUrl { get; set; }
         public string Bio { get; set; }
         public ICollection<SocialMedia> SocialMedias { get; set; }
+        public ICollection<Course> Courses { get; set; }
     }
 }

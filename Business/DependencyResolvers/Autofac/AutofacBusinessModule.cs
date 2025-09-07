@@ -34,6 +34,8 @@ public class AutofacBusinessModule : Module
         builder.RegisterType<BlogManager>().As<IBlogService>();
         builder.RegisterType<EFBlogdal>().As<IBlogDal>();
 
+        builder.RegisterType<TagManager>().As<ITagService>();
+        builder.RegisterType<EFTagDal>().As<ITagDal>();
 
         builder.RegisterType<ContactBlockManager>().As<IContactBlockService>();
         builder.RegisterType<EFContactBlockDal>().As<IContactBlockDal>();
