@@ -26,6 +26,7 @@ namespace DataAccess.Concrete.Database
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<EventContent> EventContents { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Partner> Partners { get; set; }
         public DbSet<Course> Courses { get; set; }
 
 
